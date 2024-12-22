@@ -34,13 +34,14 @@ async def get_id(message: Message):
 @router.message()
 async def handle_reply_button(message: Message):
     if message.text == "Достижения":
-        new_keyboard = ReplyKeyboardMarkup(
+        keyboard = ReplyKeyboardMarkup(
             keyboard=[
                 [KeyboardButton(text="⏪Назад"), KeyboardButton(text="Моих достижений: 10")],
                 [KeyboardButton(text="Список достижений и награды")]
             ],
             resize_keyboard=True
         )
+        await message.answer("", reply_markup=keyboard)
 
     elif message.text == "Список лидеров":
         await message.answer("Список лидеров")
@@ -59,6 +60,5 @@ async def handle_reply_button(message: Message):
         )
         await message.answer("тут будет профиль игрока", reply_markup=keyboard)
 
-@router.message()
-async def handle_reply_button(message: Message):
+    else:
         await message.answer(f"тут будет профиль игрока")
