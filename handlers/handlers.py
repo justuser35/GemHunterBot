@@ -1,10 +1,9 @@
-import asyncio
-
-from aiogram import Router, F
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from aiogram import Router, F
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.filters import Command
 from Bot import bot
+import asyncio
 
 router = Router()
 
@@ -127,6 +126,7 @@ async def handle_reply_button(message: Message):
     elif message.text == "🌐Друзья":
         await message.answer("🌐Друзья")
 
+        
     elif message.text == "🧾Квесты":
 
         sent_message = await message.answer("Получение сведений о квестах...")
@@ -236,6 +236,7 @@ async def handle_reply_button(message: Message):
                              "3. \n"
                              "4. \n"
                              "5. \n")
+
 
     elif message.text == "⛏️Донат-орудие":
         keyboard = ReplyKeyboardMarkup(
