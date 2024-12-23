@@ -1,12 +1,20 @@
-import asyncio
-
-from aiogram import Router, F
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from aiogram import Router, F
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.filters import Command
 from Bot import bot
+import asyncio
 
 router = Router()
+
+def create_keyboard(state="Study") -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    if state == "Study":
+        builder.button(text="Исследование", callback_data="Study")
+
+    return builder.as_markup()
+
 
 @router.message(Command("start"))
 async def command_menu(message: Message):
@@ -41,8 +49,8 @@ async def handle_reply_button(message: Message):
         achiv = 1
         keyboard = ReplyKeyboardMarkup(
             keyboard=[
-                [KeyboardButton(text="⏪Назад"), KeyboardButton(text="Мои достижения")],
-                [KeyboardButton(text="Список всех достижений и награды")]
+                [KeyboardButton(text="Список всех достижений и награды"), KeyboardButton(text="Мои достижения")],
+                [KeyboardButton(text="⏪Назад")]
             ],
             resize_keyboard=True
         )
@@ -61,11 +69,28 @@ async def handle_reply_button(message: Message):
                              "9. \n"
                              "10. \n")
 
+
     elif message.text == "⛏️Перейти в шахту":
-        miners = 1
+        miners = 0
+
+        keyboard = ReplyKeyboardMarkup(
+
+            keyboard=[
+
+                [KeyboardButton(text="Выбрать шахту"), KeyboardButton(text="Совместная шахта")],
+                [KeyboardButton(text="Система поиска шахт")],
+                [KeyboardButton(text="⏪Назад")]
+
+            ],
+
+            resize_keyboard=True
+
+        )
+        await message.answer("Выберите режим \n", reply_markup=keyboard)
 
         await message.answer("⛏️Шахта \n"
                              "👨🏿Работников в шахте: "+ str(miners))
+
 
     elif message.text == "⏪Назад":
         keyboard = ReplyKeyboardMarkup(
@@ -101,7 +126,7 @@ async def handle_reply_button(message: Message):
     elif message.text == "🌐Друзья":
         await message.answer("🌐Друзья")
 
-
+        
     elif message.text == "🧾Квесты":
 
         sent_message = await message.answer("Получение сведений о квестах...")
@@ -263,5 +288,31 @@ async def handle_reply_button(message: Message):
                              "\n"
                              "-- В этапе разработки -- \n")
 
+    elif message.text == "Выбрать шахту":
+        await message.answer("Выбор шахты. \n"
+                             "1. Каменное русло \n")
+
+    elif message.text == "Совместная шахта":
+        await message.answer("Выбор друга \n"
+                             "1. ... \n"
+                             "\n"
+                             "0/1\n")
+
+    elif message.text == "Система поиска шахт":
+        await message.answer("Поиск шахты.\n")
+        keyboard = create_keyboard(state="Study")
+        await message.answer("Шахта №1 \n", reply_markup=keyboard)
+        keyboard = create_keyboard(state="Study")
+        await message.answer("Шахта №2 \n", reply_markup=keyboard)
+        keyboard = create_keyboard(state="Study")
+        await message.answer("Шахта №3 \n", reply_markup=keyboard)
+
+        @router.callback_query()
+        async def handle_callback(callback_query: CallbackQuery):
+            if callback_query.data == "Study":
+                await callback_query.message.answer("Исследовано!")
+                await callback_query.answer()
+
     else:
         await message.answer(f"тут будет профиль игрока")
+
