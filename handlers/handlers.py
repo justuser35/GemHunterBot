@@ -1,5 +1,5 @@
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
-from aiogram import Router, F
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, CallbackQuery
+from aiogram import Router
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.filters import Command
 from Bot import bot
@@ -15,6 +15,11 @@ def create_keyboard(state="Study") -> InlineKeyboardMarkup:
 
     return builder.as_markup()
 
+@router.callback_query()
+async def handle_callback(callback_query: CallbackQuery):
+    if callback_query.data == "Study":
+        await callback_query.message.answer("Исследовано!")
+        await callback_query.answer()
 
 @router.message(Command("start"))
 async def command_menu(message: Message):
@@ -155,15 +160,15 @@ async def handle_reply_button(message: Message):
             resize_keyboard=True
         )
         await bot.delete_message(chat_id=sent_message.chat.id,
-                                    message_id=sent_message.message_id)
+                                 message_id=sent_message.message_id)
         await message.answer(text = DailyIndicator + " | " + WeeklyIndicator, reply_markup = keyboard)
 
     elif message.text == "🟩 Ежедневные" or message.text == "🟥 Ежедневные":
         await message.answer("Ежедневные \n"
-                             "1. Пенис \n"
-                             "2. Викторович \n"
-                             "3. Пенисов \n"
-                             "4. Да \n")
+                             "1. + \n"
+                             "2. + \n"
+                             "3. + \n"
+                             "4. + \n")
 
     elif message.text == "🟩 Еженедельные" or message.text == "🟥 Еженедельные":
         await message.answer("Еженедельные \n"
@@ -306,12 +311,6 @@ async def handle_reply_button(message: Message):
         await message.answer("Шахта №2 \n", reply_markup=keyboard)
         keyboard = create_keyboard(state="Study")
         await message.answer("Шахта №3 \n", reply_markup=keyboard)
-
-        @router.callback_query()
-        async def handle_callback(callback_query: CallbackQuery):
-            if callback_query.data == "Study":
-                await callback_query.message.answer("Исследовано!")
-                await callback_query.answer()
 
     else:
         await message.answer(f"тут будет профиль игрока")
